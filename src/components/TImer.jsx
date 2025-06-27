@@ -1,10 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 function Timer() {
   const [time, setTime] = useState(0);
   const [show, setShowText] = useState(false);
   const [typedText, setText] = useState("");
   const [timeUp, setTimeUp] = useState(false);
+  const[error, setError]= useState(0)
   const interval = useRef(null);
 
   const defaultParagraph = "The quick brown fox jumps over the lazy dog. This sentence contains every letter of the alphabet, making it a perfect typing drill. Practicing daily helps improve speed and accuracy. Consistency is key when learning to type faster and more efficiently. Keep your fingers on the home row, and don't forget to take breaks!";
@@ -23,6 +24,18 @@ function Timer() {
       );
     });
   };
+
+  useEffect(()=>{
+    let errorCount = 0;
+    let errorLength = Math.min(typedText.length, defaultParagraph.length)
+    for(let i = 0; i<errorLength; i++){
+      if (typedText[i] !== defaultParagraph[i]) {
+        errorCount ++
+      }
+    }
+    setError(errorCount)
+  },[typedText])
+
 
   const handler = () => {
     let i = 1;
@@ -51,6 +64,7 @@ function Timer() {
         >
           Start
         </button>
+        <button  className="border-1 text-black-400 font-bold w-29 rounded-2xl shadow-xl">Restart</button>
       </div>
 
       <div className="mt-4 max-w-2xl">
@@ -70,6 +84,7 @@ function Timer() {
           placeholder="Test Your Typing Speed........"
         />
       </div>
+      <h3>{error}</h3>
     </div>
   );
 }
